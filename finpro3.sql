@@ -6,9 +6,9 @@ create table services (
 	nama_motor text,
 	transmisi text,
 	yang_ditangani text,
-	harga_servis_Rp text,
+	harga_servis_rp text,
 	servis_ke text,
-	waktu_pengerjaan_menit text,
+	waktu_pengerjaan_menit int,
 	tanggal_pengerjaan date
 );
 

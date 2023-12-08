@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from sqlalchemy import text
 
 list_montir = ['', 'Subagja', 'Andi', 'Karyono']
@@ -8,7 +9,7 @@ conn = st.connection("postgresql", type="sql",
                      url="postgresql://rizkiim198:5prbLmGT4qZk@ep-holy-snow-47509721.us-east-2.aws.neon.tech/finpro3")
 with conn.session as session:
     query = text('CREATE TABLE IF NOT EXISTS SERVICES (id serial, nama_montir varchar, nama_motor varchar, transmisi char(25), \
-                                                       yang_ditangani text, harga_service_Rp varchar, servis_ke text, tanggal_pengerjaan date);')
+                                                       yang_ditangani text, harga_servis_Rp varchar, servis_ke text, tanggal_pengerjaan date);')
     session.execute(query)
 
 st.header('SIMPLE RECORD PEKERJAAN MONTIR')
@@ -41,19 +42,19 @@ if page == "Search Data":
             if search_query:
                 search_results = conn.query(f"SELECT * FROM services WHERE LOWER(nama_motor) LIKE LOWER('%{search_query}%') ORDER BY id;", ttl="0").set_index('id')
         elif search_criteria == "Tanggal Pengerjaan":
-            search_query = st.sidebar.time_input("Enter Tanggal Pengerjaan")
+            search_query = st.sidebar.date_input("Enter Tanggal Pengerjaan")
             if search_query:
                 search_results = conn.query(f"SELECT * FROM services WHERE tanggal_pengerjaan = '{search_query}' ORDER BY id;", ttl="0").set_index('id')
 
         # Display search results
-        st.dataframe(search_results)
+        pd.dataframe(search_results)
 
 
 #EDIT DATA
 if page == "Edit Data":
     if st.button('Tambah Data'):
         with conn.session as session:
-            query = text('INSERT INTO services (nama_montir, nama_customer,nama_motor, transmisi, yang_ditangani, harga_service_Rp, servis_ke, waktu_pengerjaan_menit, tanggal_pengerjaan) \
+            query = text('INSERT INTO services (nama_montir, nama_customer, nama_motor, transmisi, yang_ditangani, harga_servis_rp, servis_ke, waktu_pengerjaan_menit, tanggal_pengerjaan) \
                           VALUES (:1, :2,:3, :4, :5, :6, :7, :8, :9);')
             session.execute(query, {'1':'', '2':'','3':'', '4':'', '5':'[]', '6':'', '7':'', '8':'', '9':None})
             session.commit()
@@ -66,7 +67,7 @@ if page == "Edit Data":
         nama_motor_lama = result["nama_motor"]
         transmisi_lama = result["transmisi"]
         yang_ditangani_lama = result["yang_ditangani"]
-        harga_servis_lama = result["harga_servis_Rp"]
+        harga_servis_lama = result["harga_servis_rp"]
         servis_ke_lama = result["servis_ke"]
         waktu_pengerjaan_lama = result["waktu_pengerjaan_menit"]
         tanggal_pengerjaan_lama = result["tanggal_pengerjaan"]
@@ -78,9 +79,9 @@ if page == "Edit Data":
                 nama_motor_baru = st.text_input("nama_motor", nama_motor_lama)
                 transmisi_baru = st.selectbox("transmisi", list_transmisi, list_transmisi.index(transmisi_lama))
                 yang_ditangani_baru = st.multiselect("yang_ditangani", ["Perawatan", "Ganti Ban", "Ganti Oli", "Ganti Aki"], eval(yang_ditangani_lama))
-                harga_servis_baru = st.text_input("harga_servis_Rp", harga_servis_lama)
-                servis_ke_baru = st.text_input("servis_ke", servis_ke_lama)
-                waktu_pengerjaan_baru = st.text_input("waktu_pengerjaan_menit", waktu_pengerjaan_lama)
+                harga_servis_baru = st.number_input("harga_servis_rp", min_value=0, value=0, step=1)
+                servis_ke_baru = st.number_input("servis_ke", min_value=0, value=0, step=1)
+                waktu_pengerjaan_baru = st.number_input("waktu_pengerjaan_menit", min_value=0, value=0, step=1)
                 tanggal_pengerjaan_baru = st.date_input("tanggal_pengerjaan", tanggal_pengerjaan_lama)
                 
                 col1, col2 = st.columns([1, 6])
