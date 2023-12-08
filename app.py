@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 from sqlalchemy import text
 
 list_montir = ['', 'Subagja', 'Andi', 'Karyono']
@@ -82,7 +83,7 @@ if page == "Edit Data":
                 harga_servis_baru = st.number_input("harga_servis_rp", min_value=0, value=0, step=1)
                 servis_ke_baru = st.number_input("servis_ke", min_value=0, value=0, step=1)
                 waktu_pengerjaan_baru = st.number_input("waktu_pengerjaan_menit", min_value=0, value=0, step=1)
-                tanggal_pengerjaan_baru = st.date_input("tanggal_pengerjaan", tanggal_pengerjaan_lama)
+                tanggal_pengerjaan_baru = st.date_input("tanggal_pengerjaan", tanggal_pengerjaan_lama, max_value=datetime.today())
                 
                 col1, col2 = st.columns([1, 6])
 
