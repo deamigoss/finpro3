@@ -23,12 +23,12 @@ if page == "View Data":
 ##SEARCH DATA
 if page == "Search Data":
     # Add search criteria
-    search_criteria = st.sidebar.selectbox("Search by", ["-- Select Search Criteria --", "Montir", "Nama Customer", "Motor", "Tanggal Pengerjaan"])
+    search_criteria = st.sidebar.selectbox("Search by", ["-- Mau Cari Apa? --", "Montir", "Nama Customer", "Motor", "Tanggal Pengerjaan"])
 
     # Define an empty DataFrame for the search results
     search_results = pd.DataFrame()
 
-    if search_criteria != "-- Select Search Criteria --":
+    if search_criteria != "-- Mau Cari Apa? --":
         # Based on the selected criteria, get the search query from the user
         if search_criteria == "Montir":
             selected_montir = st.sidebar.selectbox("Select Montir", list_montir[1:])
@@ -47,7 +47,7 @@ if page == "Search Data":
                 search_results = conn.query(f"SELECT * FROM services WHERE tanggal_pengerjaan = '{search_query}' ORDER BY id;", ttl="0").set_index('id')
 
         # Display search results
-        pd.dataframe(search_results)
+        pd.DataFrame(search_results)
 
 
 #EDIT DATA
